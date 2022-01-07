@@ -1,0 +1,263 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Cascadia Mono;}{\f1\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green0\blue255;\red0\green0\blue0;\red43\green145\blue175;\red0\green128\blue0;\red163\green21\blue21;}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\cf1\f0\fs19\lang9 using\cf2  System;\par
+\cf1 using\cf2  System.Collections.Generic;\par
+\cf1 using\cf2  LibraryMS.DAL;\par
+\cf1 using\cf2  LibraryMS.Entity;\par
+\cf1 using\cf2  System.Linq;\par
+\cf1 using\cf2  System.Text.RegularExpressions;\par
+\par
+\cf1 namespace\cf2  LibraryMS.BLL\par
+\{\par
+    \cf1 public\cf2  \cf1 class\cf2  \cf3 UserBLL\cf2\par
+    \{\par
+        \cf4 //USER VALIDATION PART\cf2\par
+        \cf1 private\cf2  \cf1 bool\cf2  UserValidation(User user)\par
+        \{\par
+            \cf1 bool\cf2  userValid;\par
+\par
+            \cf1 if\cf2  (user.UserId == 0 || user.UserId >= 100000)\par
+            \{\par
+\par
+                Console.WriteLine(\cf5 "Invalid User id!!!, user id should be in between 1 to 100000"\cf2 );\par
+                \par
+\par
+                userValid = \cf1 false\cf2 ;\par
+            \}\par
+            \cf1 else\cf2  \cf1 if\cf2  (user.UserName.Length <= 3 || user.UserName.Length > 30)\par
+            \{\par
+                Console.WriteLine(\cf5 "Invalid User name!!!, minimum 2 maximum 30 characters are allowed"\cf2 );\par
+    \par
+\par
+                userValid = \cf1 false\cf2 ;\par
+            \}\par
+            \cf1 else\cf2  \cf1 if\cf2  (user.UserName.Any(\cf1 char\cf2 .IsDigit))\par
+            \{\par
+    \par
+                Console.WriteLine(\cf5 "Invalid User name!!!, name should not contains digit"\cf2 );\par
+            \par
+                userValid = \cf1 false\cf2 ;\par
+            \}\par
+            \cf1 else\cf2  \cf1 if\cf2  (!(\cf1 new\cf2  Regex(\cf5 "([\\\\w\\\\.\\\\-_]+)?\\\\w+@[\\\\w-_]+(\\\\.\\\\w+)\{1,\}"\cf2 ).IsMatch(user.UserEmail)))\par
+            \{\par
+          \par
+                Console.WriteLine(\cf5 "Invalid Email!!!, email should be an email"\cf2 );\par
+                \par
+                userValid = \cf1 false\cf2 ;\par
+            \}\par
+            \cf1 else\cf2  \cf1 if\cf2  (user.UserPassword.Length <= 7 || user.UserPassword.Length > 15)\par
+            \{\par
+              \par
+                Console.WriteLine(\cf5 "Invalid Password!!!, minimum 8 maximum 15 characters are allowed"\cf2 );\par
+            \par
+\par
+                userValid = \cf1 false\cf2 ;\par
+            \}\par
+            \cf1 else\cf2\par
+            \{\par
+                userValid = \cf1 true\cf2 ;\par
+            \}\par
+            \cf1 return\cf2  userValid;\par
+        \}\par
+\par
+        UserDAL userDAL = \cf1 new\cf2  UserDAL();\par
+\par
+        \cf4 //RETURNING USERS FROM USER TABLE =>BLL\cf2\par
+        \cf1 public\cf2  List<User> GetAllUsersBLL()\par
+        \{\par
+            List<User> users = userDAL.GetAllUserssDAL();\par
+            \cf1 return\cf2  users;\par
+        \}\par
+        \cf4 //ADDING USER INTO USER TABLE =>BLLL \cf2\par
+        \cf1 public\cf2  \cf1 void\cf2  AddUsersBLL(User user)\par
+        \{\par
+            \cf1 bool\cf2  isValidated = UserValidation(user);\par
+            \cf1 if\cf2  (isValidated)\par
+            \{\par
+                \cf4 /* UserDAL userDAL = new UserDAL();*/\cf2\par
+                \cf1 bool\cf2  isDone = userDAL.AddUsersDAL(user);\par
+                \cf1 if\cf2  (isDone == \cf1 true\cf2 )\par
+                \{\par
+                    \par
+                    Console.WriteLine(\cf5 "User added successfully..."\cf2 );\par
+             \par
+                \}\par
+                \cf1 else\cf2\par
+                \{\par
+                    Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+                    \par
+                \}\par
+            \}\par
+            \cf1 else\cf2\par
+            \{\par
+                \par
+                Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+                \par
+            \}\par
+        \}\par
+        \cf4 //UPDATING USER FROM USER TABLE =>BLL\cf2\par
+        \cf1 public\cf2  \cf1 void\cf2  UpdateUsersBLL(User user)\par
+        \{\par
+            \cf1 bool\cf2  isValidated = UserValidation(user);\par
+            \cf1 if\cf2  (isValidated)\par
+            \{\par
+                UserDAL userDAL = \cf1 new\cf2  UserDAL();\par
+                \cf1 bool\cf2  isDone = userDAL.UpdateUsersDAL(user);\par
+                \cf1 if\cf2  (isDone == \cf1 true\cf2 )\par
+                \{\par
+                \par
+                    Console.WriteLine(\cf5 "User updated successfully..."\cf2 );\par
+                    \par
+                \}\par
+                \cf1 else\cf2\par
+                \{\par
+                   \par
+                    Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+                   \par
+                \}\par
+            \}\par
+            \cf1 else\cf2\par
+            \{\par
+               \par
+                Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+             \par
+            \}\par
+        \}\par
+        \cf4 //REMOVING USER FROM USER TABLE =>BLL\cf2\par
+        \cf1 public\cf2  \cf1 void\cf2  RemoveUsersBLL(\cf1 int\cf2  userId)\par
+        \{\par
+            \cf1 if\cf2  (userId == 0 || userId >= 100000)\par
+            \{\par
+               \par
+                Console.WriteLine(\cf5 "Invalid User Id..."\cf2 );\par
+                Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+                \par
+            \}\par
+            \cf1 else\cf2\par
+            \{\par
+               \par
+                \cf1 bool\cf2  isDone = userDAL.RemoveUsersDAL(userId);\par
+                \cf1 if\cf2  (isDone)\par
+                \{\par
+                    Console.WriteLine(\cf5 "User deleted successfully..."\cf2 );\par
+                \par
+                \}\par
+                \cf1 else\cf2\par
+                \{\par
+                  \par
+                    Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+      \par
+                \}\par
+            \}\par
+\par
+\par
+\par
+        \}\par
+\par
+\par
+        \cf4 //CODE  FOR INDIVIDUAL USERS......\cf2\par
+\par
+        \cf4 //INDIVIDUAL USER LOGIN CREDENTIAL CHECKING =>BLL\cf2\par
+        \cf1 public\cf2  \cf1 bool\cf2  UserLogin(\cf1 string\cf2  userEmail, \cf1 string\cf2  userPass)\par
+        \{\par
+            UserDAL userDAL = \cf1 new\cf2  UserDAL();\par
+            List<User> users = userDAL.GetAllUserssDAL();\par
+            \cf1 bool\cf2  isDone = users.Exists(u => u.UserEmail == userEmail && u.UserPassword == userPass);\par
+            \cf1 if\cf2  (isDone)\par
+            \{\par
+                \par
+                Console.WriteLine(\cf5 "Logged in successfully..."\cf2 );\par
+                \par
+                \cf1 return\cf2  \cf1 true\cf2 ;\par
+            \}\par
+            \cf1 else\cf2\par
+            \{\par
+                Console.WriteLine(\cf5 "Invalid Email Id or Password..."\cf2 );\par
+                \par
+                \cf1 return\cf2  \cf1 false\cf2 ;\par
+            \}\par
+        \}\par
+        \cf4 //GET USER ID FROM USER TABLE =>BLL \cf2\par
+        \cf1 public\cf2  \cf1 int\cf2  GetUserIdBLL(\cf1 string\cf2  userEmail)\par
+        \{\par
+            List<User> users = userDAL.GetAllUserssDAL();\par
+            User user = users.Find(u => u.UserEmail == userEmail);\par
+            \cf1 return\cf2  user.UserId;\par
+        \}\par
+        \cf4 //REQUEST BOOK TO BORROW =>BLL \cf2\par
+        \cf1 public\cf2  \cf1 void\cf2  RequestBookBLL(\cf1 int\cf2  bookId, \cf1 int\cf2  userId)\par
+        \{\par
+            Book book = BookDAL.books.Find(b => b.BookId == bookId);\par
+            \cf1 if\cf2  (book.BookCopies > 0)\par
+            \{\par
+                \cf1 bool\cf2  isDone = userDAL.RequestBookDAL(bookId, userId);\par
+                \cf1 if\cf2  (isDone)\par
+                \{\par
+                 \par
+                    Console.WriteLine(\cf5 "Requested successfully..."\cf2 );\par
+                \par
+                \}\par
+                \cf1 else\cf2\par
+                \{\par
+                    Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+                    \par
+                \}\par
+            \}\par
+            \cf1 else\cf2\par
+            \{\par
+               \par
+                Console.WriteLine(\cf5 "Sorry book is empty..."\cf2 );\par
+                Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+                \par
+            \}\par
+\par
+        \}\par
+        \cf4 //RETRIEVE REQUESTED BOOK FROM REQUESTED TABLE =>BLL \cf2\par
+        \cf1 public\cf2  List<RequestedBook> GetRequestBookBL()\par
+        \{\par
+            \cf1 return\cf2  userDAL.GetRequestBookDAL();\par
+        \}\par
+        \cf4 //ACCEPT A BOOK REQUEST OF INDIVIDUAL USER =>BLL\cf2\par
+        \cf1 public\cf2  \cf1 void\cf2  AcceptRequestBLL(\cf1 int\cf2  userId, \cf1 int\cf2  bookId)\par
+        \{\par
+            \cf1 bool\cf2  isDone = userDAL.AcceptRequestDAL(userId, bookId);\par
+            \cf1 if\cf2  (isDone)\par
+            \{\par
+                Console.WriteLine(\cf5 "Accepted successfully..."\cf2 );\par
+         \par
+            \}\par
+            \cf1 else\cf2\par
+            \{\par
+           \par
+                Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+                \par
+            \}\par
+        \}\par
+        \cf4 //RETRIEVE RECIEVED BOOKS FROM RECIEVED TABLE =>BLL\cf2\par
+        \cf1 public\cf2  List<RecievedBook> GetRecievedBookBLL()\par
+        \{\par
+            \cf1 return\cf2  userDAL.GetRecievedBookDAL();\par
+        \}\par
+        \cf4 //DELETE RECIEVED BOOK FROM RECIEVED TABLE =>DAL\cf2\par
+        \cf1 public\cf2  \cf1 void\cf2  DeleteRecievedBLL(\cf1 int\cf2  bookId, \cf1 int\cf2  userId)\par
+        \{\par
+            \cf1 bool\cf2  isDone = userDAL.DeleteRecievedDAL(bookId, userId);\par
+            \cf1 if\cf2  (isDone)\par
+            \{\par
+                \par
+                Console.WriteLine(\cf5 "Book deleted successfully..."\cf2 );\par
+                \par
+            \}\par
+            \cf1 else\cf2\par
+            \{\par
+                \par
+                Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+                \par
+            \}\par
+        \}\par
+\par
+    \}\par
+\}\cf0\f1\fs22\par
+}
+ 

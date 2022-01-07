@@ -1,0 +1,416 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 using System;\par
+using System.Collections.Generic;\par
+using LibraryMS.Entity;\par
+using LibraryMS.BLL;\par
+using LibraryMS.Exception;\par
+\par
+namespace LibraryMS.CSharp\par
+\{\par
+    class UserPL\par
+    \{\par
+        private User user = new User();\par
+        //USER MENU\par
+        private void GetUserMenu()\par
+        \{\par
+            Console.WriteLine("1) Press 1 to add a user\\n" +\par
+                "2) Press 2 to update a user\\n" +\par
+                "3) Press 3 to delete a user\\n" +\par
+                "4) Press 4 to show all user\\n" +\par
+                "5) Press 5 to exit");\par
+        \}\par
+        //ADD USER INTO USER TABLE\par
+        private void AddUser()\par
+        \{\par
+            try\par
+            \{\par
+                Console.WriteLine("Enter user details..");\par
+                Console.Write("User Id: ");\par
+                user.UserId = int.Parse(Console.ReadLine());\par
+                Console.Write("User Name: ");\par
+                user.UserName = Console.ReadLine();\par
+                Console.Write("User Email: ");\par
+                user.UserEmail = Console.ReadLine();\par
+                Console.Write("User Password: ");\par
+                user.UserPassword = Console.ReadLine();\par
+                UserBLL userBLL = new UserBLL();\par
+                userBLL.AddUsersBLL(user);\par
+            \}\par
+            catch (FormatException)\par
+            \{\par
+                Console.WriteLine("Enter a valid input!!!");\par
+            \}\par
+            catch (LibraryMSException)\par
+            \{\par
+                throw new LibraryMSException("Some unknown exception is occured..");\par
+            \}\par
+        \}\par
+        //UPDATE USER FROM USER TABLE\par
+        private void UpdateUser()\par
+        \{\par
+            try\par
+            \{\par
+                Console.WriteLine("Enter user details..");\par
+                Console.Write("User Id: ");\par
+                user.UserId = int.Parse(Console.ReadLine());\par
+                Console.Write("User Name: ");\par
+                user.UserName = Console.ReadLine();\par
+                Console.Write("User Email: ");\par
+                user.UserEmail = Console.ReadLine();\par
+                Console.Write("User Password: ");\par
+                user.UserPassword = Console.ReadLine();\par
+                UserBLL userBLL = new UserBLL();\par
+                userBLL.UpdateUsersBLL(user);\par
+            \}\par
+            catch (FormatException)\par
+            \{\par
+                Console.WriteLine("Enter a valid input!!!");\par
+            \}\par
+            catch (LibraryMSException)\par
+            \{\par
+                throw new LibraryMSException("Some unknown exception is occured..");\par
+            \}\par
+        \}\par
+        //REMOVE USER FROM USER TABLE\par
+        private void RemoveUser()\par
+        \{\par
+            try\par
+            \{\par
+                Console.WriteLine("Enter user details..");\par
+                Console.Write("User Id: ");\par
+                int userId = int.Parse(Console.ReadLine());\par
+                UserBLL userBLL = new UserBLL();\par
+                userBLL.RemoveUsersBLL(userId);\par
+            \}\par
+            catch (LibraryMSException)\par
+            \{\par
+                Console.WriteLine("Enter a valid input");\par
+            \}\par
+        \}\par
+\par
+        //RETRIEVE USERS FROM USER TABLE\par
+\par
+        private void GetAllUser()\par
+        \{\par
+            List<User> users = new List<User>();\par
+            UserBLL userBLL = new UserBLL();\par
+            users = userBLL.GetAllUsersBLL();\par
+            Console.WriteLine("---------------------------Users-List---------------------------");\par
+            Console.WriteLine("--Id-----Name---------------Email------------------Password-----");\par
+            foreach (User user in users)\par
+            \{\par
+                Console.WriteLine("  " + user.UserId + "\\t" + user.UserName + "\\t " + user.UserEmail + "\\t" + user.UserPassword);\par
+            \}\par
+            Console.WriteLine("----------------------------------------------------------------");\par
+        \}\par
+\par
+        //COMPLETE USER SECTION\par
+\par
+        public void UserSection()\par
+        \{\par
+            Console.WriteLine("Welcome-to-User-Section-------------");\par
+            bool userLoop = true;\par
+            while (userLoop == true)\par
+            \{\par
+                try\par
+                \{\par
+                    GetUserMenu();\par
+                    int userCase = int.Parse(Console.ReadLine());\par
+                    switch (userCase)\par
+                    \{\par
+                        case 1:\par
+                            AddUser();\par
+                            break;\par
+                        case 2:\par
+                            UpdateUser();\par
+                            break;\par
+                        case 3:\par
+                            RemoveUser();\par
+                            break;\par
+                        case 4:\par
+                            GetAllUser();\par
+                            break;\par
+                        case 5:\par
+                            Console.WriteLine();\par
+                            userLoop = false;\par
+                            break;\par
+                        default:\par
+                            Console.WriteLine("Invalid input!!!");\par
+                            break;\par
+                    \}\par
+                \}\par
+                catch (FormatException)\par
+                \{\par
+                    Console.WriteLine("Sorry try agian once!!!");\par
+                \}\par
+                catch (LibraryMSException)\par
+                \{\par
+                    throw new LibraryMSException("Some unknown exception is occured..");\par
+                \}\par
+            \}\par
+        \}\par
+\par
+\par
+\par
+        //CODES USED FOR INDIVIDUAL USER.....\par
+\par
+        //INDIVIDUAL USER LOGIN CREDENTIAL CHECKING\par
+        public void UserLogin()\par
+        \{\par
+            try\par
+            \{\par
+\par
+                Console.WriteLine("User-Login-----------");\par
+                Console.Write("Email Id: ");\par
+                string userEmail = Console.ReadLine();\par
+                Console.Write("Password: ");\par
+                string userPass = Console.ReadLine();\par
+                UserBLL userBLL = new UserBLL();\par
+                bool isDone = userBLL.UserLogin(userEmail, userPass);\par
+                if (isDone)\par
+                \{\par
+                    int userId = userBLL.GetUserIdBLL(userEmail);\par
+                    UserHomeSection(userId);\par
+                \}\par
+                else\par
+                \{\par
+                    Console.WriteLine("Try again...");\par
+                \}\par
+            \}\par
+            catch (LibraryMSException)\par
+            \{\par
+                throw new LibraryMSException("Some unknown exception is occured..");\par
+            \}\par
+\par
+        \}\par
+        //INDIVIDUAL USER HOME MENU\par
+        private void GetUserHomeMenu()\par
+        \{\par
+            Console.Write("1) Press 1 to show books section\\n" +\par
+                "2) Press 2 to show request section\\n" +\par
+                "3) Press 3 to show recieve section\\n" +\par
+                "4) Press 4 to ");\par
+            Console.Write("logout");\par
+            Console.WriteLine();\par
+        \}\par
+        //INDIVIDUAL USER HOME SCREEN\par
+        private void UserHomeSection(int userId)\par
+        \{\par
+            Console.WriteLine("Welcome-to-User-Section--------------");\par
+            bool userLoop = true;\par
+            while (userLoop == true)\par
+            \{\par
+                try\par
+                \{\par
+                    GetUserHomeMenu();\par
+                    int userCase = int.Parse(Console.ReadLine());\par
+                    switch (userCase)\par
+                    \{\par
+                        case 1:\par
+                            BookPL bookPL = new BookPL();\par
+                            bookPL.GetAllBook();\par
+                            break;\par
+                        case 2:\par
+                            RequestSection(userId);\par
+                            break;\par
+                        case 3:\par
+                            RecieveSection(userId);\par
+                            break;\par
+                        case 4:\par
+                            Console.WriteLine("Logged out successfully..\\n have a nice day...");\par
+                            userLoop = false;\par
+                            break;\par
+                        default:\par
+                            Console.WriteLine("Invalid input!!!");\par
+                            break;\par
+                    \}\par
+                \}\par
+                catch (FormatException)\par
+                \{\par
+                    Console.WriteLine("Sorry try agian once!!!");\par
+                \}\par
+                catch (LibraryMSException)\par
+                \{\par
+                    throw new LibraryMSException("Some unknown exception is occured..");\par
+                \}\par
+            \}\par
+        \}\par
+\par
+        //REQUEST BOOK MENU\par
+\par
+        private void RequestSection(int userId)\par
+        \{\par
+            bool reqLoop = true;\par
+            while (reqLoop == true)\par
+            \{\par
+                try\par
+                \{\par
+                    Console.WriteLine("Welcome-to-Request-Section--------------");\par
+                    Console.WriteLine("1) Press 1 to rise a book request\\n" +\par
+                       "2) Press 2 to show requested books\\n" +\par
+                       "3) Press 3 to exit");\par
+                    int reqCase = int.Parse(Console.ReadLine());\par
+                    switch (reqCase)\par
+                    \{\par
+                        case 1:\par
+                            RequestBook(userId);\par
+                            break;\par
+                        case 2:\par
+                            GetUserRequestBook(userId);\par
+                            break;\par
+                        case 3:\par
+                            Console.WriteLine("");\par
+                            reqLoop = false;\par
+                            break;\par
+                        default:\par
+                            Console.WriteLine("Invalid input!!!");\par
+                            break;\par
+                    \}\par
+                \}\par
+                catch (FormatException)\par
+                \{\par
+                    Console.WriteLine("Sorry try agian once!!!");\par
+                \}\par
+                catch (LibraryMSException)\par
+                \{\par
+                    throw new LibraryMSException("Some unknown exception is occured..");\par
+                \}\par
+            \}\par
+        \}\par
+\par
+        //REQUEST A BOOK TO BORROW BY INDIVIDUAL USER\par
+\par
+        private void RequestBook(int userId)\par
+        \{\par
+            try\par
+            \{\par
+                Console.Write("Book Id: ");\par
+                int bookId = int.Parse(Console.ReadLine());\par
+                UserBLL userBLL = new UserBLL();\par
+                userBLL.RequestBookBLL(bookId, userId);\par
+            \}\par
+            catch (LibraryMSException)\par
+            \{\par
+                Console.WriteLine("Enter a valid input...");\par
+            \}\par
+\par
+        \}\par
+        //RETRIEVE REQUESTED BOOKS OF INDIVIDUAL USER FROM REQUEST TABLE\par
+        private void GetUserRequestBook(int userId)\par
+        \{\par
+            UserBLL userBLL = new UserBLL();\par
+            List<RequestedBook> requestedBooks = userBLL.GetRequestBookBL();\par
+            List<RequestedBook> requestedBooksUser = requestedBooks.FindAll(s => s.UserId == userId);\par
+            Console.WriteLine("-----------------Requested-Book-List-----------------\\n" + "--Book-Id---Book-Name---------Date-Requiested--------");\par
+            foreach (RequestedBook requested in requestedBooksUser)\par
+            \{\par
+                Console.WriteLine("  " + requested.BookId + "\\t" + requested.BookName + "\\t\\t" + requested.DateRequested.ToShortDateString());\par
+            \}\par
+            Console.WriteLine("-----------------------------------------------------");\par
+        \}\par
+\par
+        //RECIEvE BOOK MENU\par
+        private void RecieveSection(int userId)\par
+        \{\par
+            bool recLoop = true;\par
+            while (recLoop == true)\par
+            \{\par
+                try\par
+                \{\par
+                    Console.WriteLine("Welcome-to-Recieved-Section--------------");\par
+                    Console.WriteLine("1) Press 1 to delete a recieved book\\n" +\par
+                      "2) Press 2 to show recieved books\\n" +\par
+                      "3) Press 3 to exit");\par
+                    int recCase = int.Parse(Console.ReadLine());\par
+                    switch (recCase)\par
+                    \{\par
+                        case 1:\par
+                            DeleteRecieve(userId);\par
+                            break;\par
+                        case 2:\par
+                            GetUserRecievedBook(userId);\par
+                            break;\par
+                        case 3:\par
+                            Console.WriteLine("");\par
+                            recLoop = false;\par
+                            break;\par
+                        default:\par
+                            Console.WriteLine("Invalid input!!!");\par
+                            break;\par
+                    \}\par
+                \}\par
+                catch (LibraryMSException)\par
+                \{\par
+                    Console.WriteLine("Sorry try agian once!!!");\par
+                \}\par
+            \}\par
+        \}\par
+\par
+        //RETRIEVE RECIEVED BOOKS OF INDIVIDUAL USER FROM RECIEVED TABLE\par
+\par
+        private void GetUserRecievedBook(int userId)\par
+        \{\par
+            UserBLL userBLL = new UserBLL();\par
+            List<RecievedBook> recievedBooks = userBLL.GetRecievedBookBLL();\par
+            List<RecievedBook> recievedBooksUser = recievedBooks.FindAll(s => s.UserId == userId);\par
+            Console.WriteLine("------------------Recieved-Book-List-----------------\\n" +\par
+                              "--Book-Id---Book-Name----Date-Recieved------");\par
+            foreach (RecievedBook recieved in recievedBooksUser)\par
+            \{\par
+                Console.WriteLine("  " + recieved.BookId + "\\t" + recieved.BookName + "\\t\\t" + recieved.DateRecieved.ToShortDateString());\par
+            \}\par
+            Console.WriteLine("-----------------------------------------------------");\par
+        \}\par
+\par
+        //RETRIEVE REQUESTED BOOKS FROM REQUEST TABLE\par
+\par
+        public void GetRequestBook()\par
+        \{\par
+            UserBLL userBLL = new UserBLL();\par
+            List<RequestedBook> requestedBooks = userBLL.GetRequestBookBL();\par
+            Console.WriteLine("--------------------------User+Book-Requested-List------------------------\\n" + "--Book-Id---Book-Name-------Date-Requested--------User-Id---User-Name-----");\par
+            foreach (RequestedBook requested in requestedBooks)\par
+            \{\par
+                Console.WriteLine(" " + requested.BookId + "\\t" + requested.BookName + "\\t"\par
+                    + requested.DateRequested.ToShortDateString() + "\\t" + requested.UserId + "\\t" + requested.UserName);\par
+            \}\par
+            Console.WriteLine("--------------------------------------------------------------------------");\par
+        \}\par
+\par
+        //RETRIEVE RECIEVED BOOKS FROM RECIEVED TABLE\par
+        public void GetRecievedBook()\par
+        \{\par
+            UserBLL userBLL = new UserBLL();\par
+            List<RecievedBook> recievedBooks = userBLL.GetRecievedBookBLL();\par
+\par
+            Console.WriteLine("--------------------------User+Book-Recieved-List-------------------------\\n" + "--Book-Id---Book-Name-------Date-Accepted---------User-Id---User-Name-----");\par
+            foreach (RecievedBook recieved in recievedBooks)\par
+            \{\par
+                Console.WriteLine(" " + recieved.BookId + "\\t" + recieved.BookName + "\\t"\par
+                    + recieved.DateRecieved.ToShortDateString() + "\\t" + recieved.UserId + "\\t" + recieved.UserName);\par
+            \}\par
+            Console.WriteLine("--------------------------------------------------------------------------");\par
+        \}\par
+\par
+        //DELETE A RECIEVED BOOK FROM RECIEVED TABLE\par
+        private void DeleteRecieve(int userId)\par
+        \{\par
+            try\par
+            \{\par
+                Console.Write("Book Id: ");\par
+                int bookId = int.Parse(Console.ReadLine());\par
+                UserBLL userBLL = new UserBLL();\par
+                userBLL.DeleteRecievedBLL(bookId, userId);\par
+\par
+            \}\par
+            catch (LibraryMSException)\par
+            \{\par
+                Console.WriteLine("Enter a valid input...");\par
+            \}\par
+        \}\par
+    \}\par
+\}\par
+\par
+}
+ 

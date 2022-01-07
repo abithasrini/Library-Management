@@ -1,0 +1,239 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Cascadia Mono;}{\f1\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green0\blue255;\red0\green0\blue0;\red43\green145\blue175;\red0\green128\blue0;\red163\green21\blue21;}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\cf1\f0\fs19\lang9 using\cf2  System;\par
+\cf1 using\cf2  LibraryMS.BLL;\par
+\cf1 using\cf2  LibraryMS.Exception;\par
+\par
+\cf1 namespace\cf2  LibraryMS.CSharp\par
+\{\par
+    \cf1 public\cf2  \cf1 class\cf2  \cf3 AdminPL\cf2\par
+    \{\par
+        \cf4 //INDIVIDUAL ADMIN LOGIN CREDENTIAL CHECKING\cf2\par
+        \cf1 public\cf2  \cf1 void\cf2  AdminLogin()\par
+        \{\par
+            \cf1 try\cf2\par
+            \{\par
+                Console.WriteLine(\cf5 "Admin-Login-----------"\cf2 );\par
+                Console.Write(\cf5 "Email Id: "\cf2 );\par
+                \cf1 string\cf2  adminEmail = Console.ReadLine();\par
+                Console.Write(\cf5 "Password: "\cf2 );\par
+                \cf1 string\cf2  adminPass = Console.ReadLine();\par
+                AdminBLL adminBLL = \cf1 new\cf2  AdminBLL();\par
+                \cf1 bool\cf2  isDone = adminBLL.AdminLogin(adminEmail, adminPass);\par
+                \cf1 if\cf2  (isDone)\par
+                \{\par
+                    AdminSection();\par
+                \}\par
+                \cf1 else\cf2\par
+                \{\par
+                    Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+                \}\par
+            \}\par
+            \cf1 catch\cf2  (LibraryMSException)\par
+            \{\par
+                \cf1 throw\cf2  \cf1 new\cf2  LibraryMSException(\cf5 "Some unknown exception is occured.."\cf2 );\par
+            \}\par
+        \}\par
+\par
+\par
+        \cf4 //ADMIN MENU\cf2\par
+        \cf1 private\cf2  \cf1 void\cf2  GetAdminMenu()\par
+        \{\par
+            Console.Write(\cf5 "1) Press 1 to show book section\\n"\cf2  +\par
+                \cf5 "2) Press 2 to show user section\\n"\cf2  +\par
+                \cf5 "3) Press 3 to show request section\\n"\cf2  +\par
+                \cf5 "4) Press 4 to show accepted section\\n"\cf2  +\par
+                \cf5 "5) Press 5 to "\cf2 );\par
+            Console.WriteLine(\cf5 "logout"\cf2 );\par
+            Console.WriteLine();\par
+        \}\par
+\par
+        \cf4 //ADMIN COMPLETE SECTION\cf2\par
+\par
+        \cf1 private\cf2  \cf1 void\cf2  AdminSection()\par
+        \{\par
+            Console.WriteLine(\cf5 "Welcome-to-Admin-Section--------------"\cf2 );\par
+            \cf1 bool\cf2  adminLoop = \cf1 true\cf2 ;\par
+            \cf1 while\cf2  (adminLoop == \cf1 true\cf2 )\par
+            \{\par
+                \cf1 try\cf2\par
+                \{\par
+                    GetAdminMenu();\par
+                    \cf1 int\cf2  adminCase = \cf1 int\cf2 .Parse(Console.ReadLine());\par
+                    \cf1 switch\cf2  (adminCase)\par
+                    \{\par
+                        \cf1 case\cf2  1:\par
+                            BookPL bookSection = \cf1 new\cf2  BookPL();\par
+                            bookSection.BookSection();\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 case\cf2  2:\par
+                            UserPL userSection = \cf1 new\cf2  UserPL();\par
+                            userSection.UserSection();\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 case\cf2  3:\par
+                            RequestedSection();\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 case\cf2  4:\par
+                            RecievedSection();\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 case\cf2  5:\par
+                            Console.WriteLine(\cf5 "Logged out successfully..\\nTata have a nice day..."\cf2 );\par
+                            adminLoop = \cf1 false\cf2 ;\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 default\cf2 :\par
+                            Console.WriteLine(\cf5 "Invalid input!!!"\cf2 );\par
+                            \cf1 break\cf2 ;\par
+                    \}\par
+                \}\par
+                \cf1 catch\cf2  (FormatException)\par
+                \{\par
+                    Console.WriteLine(\cf5 "Sorry try again once!!!"\cf2 );\par
+                \}\par
+                \cf1 catch\cf2  (LibraryMSException)\par
+                \{\par
+                    \cf1 throw\cf2  \cf1 new\cf2  LibraryMSException(\cf5 "Some unknown Exception is occured.."\cf2 );\par
+                \}\par
+            \}\par
+        \}\par
+\par
+        \cf4 //ACCEPT A BOOK REQUEST\cf2\par
+\par
+        \cf1 public\cf2  \cf1 void\cf2  AcceptRequest()\par
+        \{\par
+            \cf1 try\cf2\par
+            \{\par
+                Console.Write(\cf5 "User Id: "\cf2 );\par
+                \cf1 int\cf2  userId = \cf1 int\cf2 .Parse(Console.ReadLine());\par
+                Console.Write(\cf5 "Book Id: "\cf2 );\par
+                \cf1 int\cf2  bookId = \cf1 int\cf2 .Parse(Console.ReadLine());\par
+                UserBLL userBLL = \cf1 new\cf2  UserBLL();\par
+                userBLL.AcceptRequestBLL(userId, bookId);\par
+            \}\par
+            \cf1 catch\cf2  (FormatException)\par
+            \{\par
+                Console.WriteLine(\cf5 "Enter a valid input..."\cf2 );\par
+            \}\par
+            \cf1 catch\cf2  (LibraryMSException)\par
+            \{\par
+                \cf1 throw\cf2  \cf1 new\cf2  LibraryMSException(\cf5 "Some unknown exception is occured.."\cf2 );\par
+            \}\par
+        \}\par
+\par
+        \cf4 //ADMIN REQUESTED BOOKS MENU\cf2\par
+\par
+        \cf1 private\cf2  \cf1 void\cf2  RequestedSection()\par
+        \{\par
+            \cf1 bool\cf2  reqLoop = \cf1 true\cf2 ;\par
+            \cf1 while\cf2  (reqLoop == \cf1 true\cf2 )\par
+            \{\par
+                \cf1 try\cf2\par
+                \{\par
+                    Console.WriteLine(\cf5 "Welcome-to-Request-Section--------------"\cf2 );\par
+                    Console.WriteLine(\cf5 "1) Press 1 to show all book request\\n"\cf2  +\par
+                        \cf5 "2) Press 2 to accept requested books\\n"\cf2  +\par
+                        \cf5 "3) Press 3 to exit"\cf2 );\par
+                    \cf1 int\cf2  reqCase = \cf1 int\cf2 .Parse(Console.ReadLine());\par
+                    \cf1 switch\cf2  (reqCase)\par
+                    \{\par
+                        \cf1 case\cf2  1:\par
+                            UserPL userPL = \cf1 new\cf2  UserPL();\par
+                            userPL.GetRequestBook();\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 case\cf2  2:\par
+                            AcceptRequest();\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 case\cf2  3:\par
+                            Console.WriteLine(\cf5 ""\cf2 );\par
+                            reqLoop = \cf1 false\cf2 ;\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 default\cf2 :\par
+                            Console.WriteLine(\cf5 "Invalid input!!!"\cf2 );\par
+                            \cf1 break\cf2 ;\par
+                    \}\par
+                \}\par
+                \cf1 catch\cf2  (FormatException)\par
+                \{\par
+                    Console.WriteLine(\cf5 "Sorry try agian once!!!"\cf2 );\par
+                \}\par
+                \cf1 catch\cf2  (LibraryMSException)\par
+                \{\par
+                    \cf1 throw\cf2  \cf1 new\cf2  LibraryMSException(\cf5 "Some unknown exception is occured.."\cf2 );\par
+                \}\par
+            \}\par
+        \}\par
+\par
+        \cf4 //DELETE A ACCEPTED BOOK\cf2\par
+\par
+        \cf1 public\cf2  \cf1 void\cf2  DeleteRecieved()\par
+        \{\par
+            \cf1 try\cf2\par
+            \{\par
+                Console.Write(\cf5 "User Id: "\cf2 );\par
+                \cf1 int\cf2  userId = \cf1 int\cf2 .Parse(Console.ReadLine());\par
+                Console.Write(\cf5 "Book Id: "\cf2 );\par
+                \cf1 int\cf2  bookId = \cf1 int\cf2 .Parse(Console.ReadLine());\par
+                UserBLL userBLL = \cf1 new\cf2  UserBLL();\par
+                userBLL.DeleteRecievedBLL(bookId, userId);\par
+\par
+            \}\par
+            \cf1 catch\cf2  (FormatException)\par
+            \{\par
+                Console.WriteLine(\cf5 "Enter a valid input..."\cf2 );\par
+            \}\par
+            \cf1 catch\cf2  (LibraryMSException)\par
+            \{\par
+                Console.WriteLine(\cf5 "Try again..."\cf2 );\par
+\par
+                \cf1 throw\cf2  \cf1 new\cf2  LibraryMSException(\cf5 "Some unknown exception is occured.."\cf2 );\par
+            \}\par
+        \}\par
+\par
+        \cf4 //ADMIN RECIEVED BOOK MENU\cf2\par
+        \cf1 private\cf2  \cf1 void\cf2  RecievedSection()\par
+        \{\par
+            \cf1 bool\cf2  recLoop = \cf1 true\cf2 ;\par
+            \cf1 while\cf2  (recLoop == \cf1 true\cf2 )\par
+            \{\par
+                \cf1 try\cf2\par
+                \{\par
+                    Console.WriteLine(\cf5 "Welcome-to-Accepted-Section--------------"\cf2 );\par
+                    Console.WriteLine(\cf5 "1) Press 1 to show all book accepted\\n"\cf2  +\par
+                       \cf5 "2) Press 2 to takeback accepted books\\n"\cf2  +\par
+                       \cf5 "3) Press 3 to exit"\cf2 );\par
+                    \cf1 int\cf2  recCase = \cf1 int\cf2 .Parse(Console.ReadLine());\par
+                    \cf1 switch\cf2  (recCase)\par
+                    \{\par
+                        \cf1 case\cf2  1:\par
+                            UserPL userPL = \cf1 new\cf2  UserPL();\par
+                            userPL.GetRecievedBook();\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 case\cf2  2:\par
+                            DeleteRecieved();\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 case\cf2  3:\par
+                            Console.WriteLine();\par
+                            recLoop = \cf1 false\cf2 ;\par
+                            \cf1 break\cf2 ;\par
+                        \cf1 default\cf2 :\par
+                            Console.WriteLine(\cf5 "Invalid input!!!"\cf2 );\par
+                            \cf1 break\cf2 ;\par
+                    \}\par
+                \}\par
+                \cf1 catch\cf2  (FormatException)\par
+                \{\par
+                    Console.WriteLine(\cf5 "Sorry try agian once!!!"\cf2 );\par
+                \}\par
+                \cf1 catch\cf2  (LibraryMSException)\par
+                \{\par
+                    \cf1 throw\cf2  \cf1 new\cf2  LibraryMSException(\cf5 "Some unknown exception is occured.."\cf2 );\par
+                \}\par
+            \}\par
+        \}\par
+    \}\par
+\}\par
+\par
+\par
+\cf0\f1\fs22\par
+}
+ 
